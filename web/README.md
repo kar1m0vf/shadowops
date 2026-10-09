@@ -1,14 +1,16 @@
-﻿# ShadowOps Control Center
+# ShadowOps Control Center
 
-React + TypeScript + Vite frontend for the ShadowOps hackathon. Responsive plum (#6D28D9), lavender (#C4B5FD) and off-white (#FAF7FF) UI with Lucide icons, shared components and CSS tokens. No AI implementation, sample recordings, production mock transport, API secrets or fabricated execution results.
+React + TypeScript + Vite, with the existing plum/lavender/off-white design. Recordings, compilation, human skill review and replay use real API calls. No production fixtures, simulated outcomes, API secrets or automatic approvals.
 
-## Run in Windows PowerShell
+## Windows PowerShell
 
-Use Node 22.12+ (tested with Node 22.20.0) and npm. From the repository root:
+Use Node 22.12+ (verified with Node 22.20.0). From the repository root:
 
 ```powershell
 Set-Location C:\Users\user\shadowops\shadowops\web
 npm ci
+npm test
+npm run build
 npm run dev
 ```
 
@@ -16,80 +18,81 @@ In another PowerShell window:
 
 ```powershell
 Start-Process 'http://127.0.0.1:5174'
-```
-
-Vite always uses **5174** with `strictPort`; it fails instead of taking ShadowBank's **5173**. Both `/api` and `/health` are proxied to `http://localhost:8000`. Preview uses the same proxy and port. There is no need to change backend CORS for local proxied requests.
-
-With your teammate's FastAPI running on port 8000, verify both direct and proxied access:
-
-```powershell
 Invoke-RestMethod 'http://127.0.0.1:8000/health' | ConvertTo-Json -Compress
 Invoke-RestMethod 'http://127.0.0.1:5174/health' | ConvertTo-Json -Compress
-
-$recordingSession = Read-Host 'Enter your actual recorder session ID'
-$encodedSession = [Uri]::EscapeDataString($recordingSession.Trim())
-Invoke-RestMethod "http://127.0.0.1:5174/api/events/$encodedSession" | ConvertTo-Json -Depth 10
+$apiContract = Invoke-RestMethod 'http://127.0.0.1:5174/openapi.json'
+$apiContract.paths.PSObject.Properties.Name
 ```
 
-Health should return `{"status":"ok","service":"shadowops-backend"}`. If FastAPI is stopped, the proxy returns a server error and the app reports **Backend unavailable**. The status is a health check, not proof that recording or compilation is active. It refreshes every 30 seconds or via the refresh control.
+Your teammate's **replay backend** must already be running on loopback port 8000 with their actual recordings/database and provider configuration. The older backend on this frontend branch has only events/health; starting it does not enable review or replay. Use your teammate's verified backend environment/launch instructions. No backend checkout, merge or source change is required by this frontend.
+
+The Control Center uses **5174**, with `strictPort`; ShadowBank remains **5173**. `/api`, `/health` and `/openapi.json` proxy to `http://localhost:8000`. For requests originating from this local UI (`http://127.0.0.1:5174` or `http://localhost:5174`), the API proxy forwards the backend origin, as required by its loopback-only replay policy. Other supplied origins remain unchanged and are rejected by that policy. Keep this dev proxy on loopback; it is not authentication for a public deployment.
+
+Health must return `{"status":"ok","service":"shadowops-backend"}`. Health is not proof of active recording, available compiler credentials or replay success. It refreshes every 30 seconds. If FastAPI is absent, the UI reports **Backend unavailable** and preserves actionable API errors.
+
+### Installation locks on Windows
+
+Stop this web app's dev/preview server with Ctrl+C **before** `npm ci`. The confirmed installation blockers during this task were the Vite process under `web/node_modules` and its esbuild child. Only those two identified development processes were stopped; clean installation and build then succeeded. Other application processes were left alone.
+
+To inspect a remaining lock, without killing anything indiscriminately:
 
 ```powershell
-npm run typecheck
-npm test
-npm run build
-npm run preview
+Get-CimInstance Win32_Process |
+  Where-Object {
+    $_.CommandLine -like '*shadowops\shadowops\web\node_modules*' -or
+    $_.ExecutablePath -like '*shadowops\shadowops\web\node_modules*'
+  } |
+  Select-Object ProcessId, ParentProcessId, Name, ExecutablePath, CommandLine
 ```
 
-Stop the dev server with Ctrl+C before running preview on the same port. A static production deployment needs its own reverse proxy for `/api` and `/health`; Vite's proxy is for dev/preview only.
+Verify the path and parent-child relationship before stopping a specific process. Do not kill all Node, Python or Chrome processes or remove the lockfile to work around a lock.
 
-## Screens and real contracts
+## Verified API contract
 
-| Screen         | Behavior                                                                                                                                                                                                      |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Overview       | Health status; last successfully loaded API response with session ID, event count, first/last event and fetch time. Current recording session is **Not available** because no active-session endpoint exists. |
-| Teach Mode     | Instructions for using the teammate's Python recorder and opening ShadowBank. No Start Recording button. The recorder script/launch contract is absent here; get the verified command from its owner.         |
-| Recordings     | User supplies an ID; `GET /api/events/{session_id}` returns an array. Timeline sorts by timestamp, then ID. Loading, invalid ID, server error and empty-array states are explicit.                            |
-| Skills         | Real `POST /api/skills/compile` with exactly `session_id` and `task_description`. Shows the original returned JSON or server error; does not execute anything.                                                |
-| Agent Activity | Empty state marked coming soon; no claimed executions.                                                                                                                                                        |
-| Settings       | Read-only connection details; preference editing is disabled and marked coming soon.                                                                                                                          |
+Integration is based on teammate branch **`origin/feat/replay`**, commit **`4bc5a8af37a2f221660e3511fc7be6b475be1cd2`**. The actual compiler/replay Pydantic models, routes, evidence validators, preflight policy and runner were inspected read-only. The generated OpenAPI from an unchanged, isolated copy of that commit was also retrieved and its confirmation/start/resume fields checked. Preflight has no detailed OpenAPI response model; its response fields come from the actual `preflight` function.
 
-The existing event model is `{ id, session_id, timestamp, url, action, target: { tag, role, label, selector } }`. Target fields may be null. Role, label and selector provide locator information. Raw JSON is available per event; URL strings are displayed as text rather than executed or opened automatically.
+`src/api/contracts.ts` defines TypeScript types and runtime Zod validation. `src/api/workflows.ts` owns typed review/replay calls. Evidence, privacy, allowed origins and live locator validation remain the backend's responsibility; client validation does not replace them. Malformed responses or mismatched resource IDs produce errors rather than invented status/results.
 
-The current backend rejects extra event fields and does **not** store input values or checkbox state. The viewer shows **Not supplied** for missing data. If a future backend actually returns `value`/`input_value`, boolean `checked`, or `semantic_locator` on an event or target, the viewer can display them, including empty input strings and false checked state. These are provisional read-only extensions, not a confirmed recorder contract; raw JSON retains other metadata. No values or locator success are inferred from the action name.
+| Operation      | Actual request/response                                                                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Compile        | `POST /api/skills/compile`, `{session_id, task_description}` → `DraftRecord`; up to 120 seconds for the real compiler                                                                              |
+| Retrieve draft | `GET /api/skill-drafts/{draft_id}` → `DraftRecord` with `skill`, source event IDs and model                                                                                                        |
+| Confirm        | `POST /api/skill-drafts/{draft_id}/confirm`, `{confirmed: true, skill: <complete corrected SkillDraft>}` → `SavedSkill`                                                                            |
+| Retrieve skill | `GET /api/skills/{skill_id}` → confirmed `SavedSkill`                                                                                                                                              |
+| Preflight      | `POST /api/replays/preflight`, `{skill_id, parameters, context_selection, step_contexts, approved_steps}` → actual readiness, errors, warnings, missing parameters, resolved steps and origins     |
+| Start          | `POST /api/replays`, the preflight request plus explicitly selected `approved: true` → `ReplayRecord`                                                                                              |
+| Status / steps | `GET /api/replays/{id}` / `GET /api/replays/{id}/steps` → record / ordered attempt logs                                                                                                            |
+| Resume         | `POST /api/replays/{id}/resume`, explicitly supplied corrections/approval only: `parameters`, `step_contexts`, `approved_steps`, `human_verified_step`, `acknowledged_step`, or `outcome_verified` |
+| Stop           | `POST /api/replays/{id}/stop`, no body → `{id, stop_requested: true}`; actual final status comes from subsequent retrieval                                                                         |
 
-Unknown session IDs currently return `200 []`. The UI explains that an unknown session and a session without events cannot be distinguished. IDs must be nonempty, at most 128 characters and safe as a single URL path segment. Requests are URL-encoded. Server validation errors retain their detail; network, timeout, non-JSON and malformed-contract errors are shown without inventing results.
+The backend exposes states `pending`, `running`, `paused`, `failed`, `completed`. A successful step is not a successful business outcome. Stop requests do not undo completed actions. Replay mutation requests are never retried automatically. If a timeout/transport error loses a mutation response, inspect backend state before retrying.
 
-### Compiler integration pending
+## Live demonstration walkthrough
 
-The local backend has none of these compiler routes yet:
+1. In **Recordings**, enter an actual session ID and select **Load recording**. Inspect the ordered events, target metadata, input values/checked state when supplied, and raw JSON. An unknown/empty session returns `[]`, which is shown as no events, not a successful demonstration.
+2. In **Skills**, submit that session ID and a task description using **Compile skill**, or enter an existing **Draft ID** and select **Retrieve draft**.
+3. Inspect every workflow step, variable, target/semantic locator, uncertainty, omitted event and success condition. Correct the exposed supported fields: skill name/description, step descriptions, fill values/templates, checked booleans, questions/uncertainties, variable descriptions/defaults and success-condition descriptions. Recorded URLs/targets/action types/event IDs/example values remain attached to their evidence. Structural/evidence restrictions are enforced and errors displayed.
+4. Select the human-review checkbox, then **Confirm skill**. Any edit clears that approval. Only an actual `SavedSkill` response displays confirmation and the saved skill ID. Confirmation does not run anything; duplicate confirmation may return 409.
+5. In **Agent Activity**, enter the **Skill ID** and select **Load skill**, or choose **Use recently confirmed skill**. Runtime values start empty; examples/defaults are never copied into runtime input.
+6. Enter the actual new variable values. If the demonstrated workflow began with a selected context, supply **Optional setup context** using the real simple CSS selector and visible text; this explicit setup click is logged as step 0. Do not assume changing a transaction variable changes the selected customer. Individual step scopes accept JSON keyed by actual one-based step numbers with `{selector, text?}` values.
+7. Leave click approvals unchecked to inspect each click at its pause, or explicitly approve particular clicks only after reviewing their effect. Select **Run preflight** and inspect warnings/errors and the resolved response. Editing runtime values, scope or approvals invalidates the result and requires another preflight. Start requires the current report to be confirmed, ready, executable and error-free.
+8. Select the separate replay-start approval checkbox, then **Start Replay**. This starts a real browser; it is a state-changing action. The timeline shows actual status and attempts, polling every 2.5 seconds while active. Navigating between pages keeps review/replay state and monitoring; reloading the browser clears frontend memory, so retain the replay ID and retrieve it again.
+9. At a pause, inspect the visible replay browser and actual backend review evidence. The screenshot field is a path on the backend host; no screenshot-serving route exists. The UI does not turn that local path into a fabricated image URL.
+10. Supply missing parameters only at step 0, or correct an ambiguous step's context with **Submit corrections and resume**. A separate unchecked approval control handles the current click, checked=true attestation, or `ask_human` acknowledgment. It never approves other steps. A status retrieval failure disables approvals and clears prior approval; last displayed state is labeled stale.
+11. After all steps, independently inspect every saved success condition. Select the outcome-verification checkbox and **Verify outcome and complete**. The UI displays `completed` only if the backend actually returns it. For failures, inspect the message/logs rather than repeating possibly completed actions. **Stop replay** sends a stop request and waits for actual worker state.
 
-| Endpoint                                    | Frontend readiness                                                                              |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `POST /api/skills/compile`                  | Connected form; actual local response is HTTP 404.                                              |
-| `GET /api/skill-drafts/{draft_id}`          | API function prepared with `unknown` response until schema is provided; no draft lookup UI yet. |
-| `POST /api/skill-drafts/{draft_id}/confirm` | Disabled UI; no request function or payload guessed.                                            |
-| `GET /api/skills/{skill_id}`                | API function prepared with `unknown` response; skill browsing pending.                          |
+## Verification performed for SO-UI-FINAL
 
-The compiler response is displayed without treating an assumed property as a draft, skill or success state. Confirmation needs the teammate's real body schema and approval semantics. Replay has no endpoint integration yet.
+- Initial installation: stopped only identified web Vite/esbuild blockers; `npm ci` and production build succeeded.
+- Strict TypeScript check and **14 API tests** passed. Tests cover exact payloads, checked=false, explicit confirmation/start, no implicit parameter defaults/approvals, identity/contract mismatches, error lists, cancellation, ordered paused attempts, resume and stop semantics.
+- Browser plugin unavailable; used temporary Playwright with installed Chrome at **1440×1000** and **390×844**. Meaningful pages rendered, no Vite overlay or JavaScript runtime errors occurred, and no horizontal overflow occurred. Draft/replay lookup and connected/error UI were exercised against the actual isolated backend.
+- Isolated browser protocol fixtures verified correction clearing review approval; exact complete confirmation payload; blank runtime values; stale preflight invalidation; explicit start/click approval; navigation retention; attestation/question/outcome approvals; ambiguity correction; stale-state blocking; and stop-request semantics. These fixtures exist only in temporary QA tooling, not in application source or backend data. They do **not** prove real AI compilation or replay success.
+- Ran the unchanged teammate backend from a temporary extracted copy with pinned dependencies and a separate **empty SQLite database**. Direct/proxied health and proxied OpenAPI returned 200; empty events returned 200 []; missing drafts/skills/replays/preflight/resume/stop returned genuine 404; invalid confirmation/start returned genuine 422. The local UI origin passed the proxy policy, while an untrusted origin and a direct cross-origin replay request returned 403.
+- No genuine populated draft/recording or saved skill was available in this isolated database. Successful AI compile, corrected confirmation, live preflight, browser actions, pause/resume and completion against the team's real Sam replay **remain unverified**. No real dispute creation or replay approval was performed by this task.
+- Production build currently reports two non-fatal Rollup warnings about misplaced `@__PURE__` comment annotations in Zod. TypeScript checks remain enabled; no warnings are suppressed.
 
-## Verification performed
+For acceptance, connect the teammate's real backend/database, use your actual draft/skill IDs and follow the walkthrough above. Compare the outcome with the visible ShadowBank state and the API logs. A successful frontend fixture test or health response is not acceptance evidence for the team's real replay.
 
-- Dependencies installed; strict TypeScript check and production build passed.
-- Five API unit tests passed: session validation, event ordering/contract checks, server errors/non-JSON health, exact compile payload, and empty retrieval. Tests use isolated fixtures; the application does not.
-- Ran the **unchanged** FastAPI code with its pinned dependencies using an isolated SQLite database under `web/.qa/`. Verified direct/proxied health `200`, unknown-session retrieval `200 []`, and real compilation `404 {"detail":"Not Found"}`.
-- Playwright/Chrome verified connected and unavailable states, actual empty retrieval and actual compile errors. Browser plugin was unavailable. Desktop 1440×1000 and mobile 390×844 were inspected; no horizontal overflow or JavaScript runtime errors occurred.
-- Separate browser fixtures verified populated chronological timelines, optional input/checkbox/locator display, loading, compile payload, and raw response rendering. These checks do **not** establish recorder or successful compiler integration. Expected HTTP errors occur in negative tests.
-- No populated Python-recorder session, compiled draft, confirmation or replay was available for genuine end-to-end verification. Those integrations remain pending. Temporary QA tooling/storage was removed after testing.
+## Architecture / limitations
 
-## Manual integration check
-
-1. Start FastAPI and this frontend. Confirm **Backend connected**; refresh checks `/health`.
-2. In **Recordings**, enter a real Python-recorder ID and click **Load recording**. Compare the count, timeline, target metadata and raw events with the API response.
-3. Try an ID with a slash: a clear local validation error should appear. Try an unknown ID: expect **No events returned**, not a successful demonstration.
-4. In **Skills**, enter a session and task, then click **Compile skill**. With the current backend, expect **Not Found (HTTP 404)**. With the compiler branch connected, compare the displayed JSON to its actual response; do not confirm a draft until its contract is integrated.
-5. Stop FastAPI and refresh the connection. Expect **Backend unavailable** and actionable errors on retrieval/compile attempts.
-
-## Architecture
-
-`src/api/client.ts` owns typed API calls, timeouts, runtime response validation and chronological sorting. `src/hooks/useBackend.ts` handles cancellable health polling. `src/components/ui.tsx` provides shared panels, status/error/empty states and JSON display. Feature pages live in `src/pages/`; `App.tsx` holds navigation and the last real responses. State stays in memory and clears on reload. Replay can be added as a feature module when its real contract is ready.
-
+Shared accessible panels, labels, notices, JSON views and review controls live under `src/components/`. API contracts are explicit and do not infer workflow behavior. Skills and replay are separate feature modules; no bank/customer-specific automation is embedded in the frontend. There is no active-recorder endpoint or replay-list endpoint, so current recording status and execution history are not invented. Settings remain read-only. Production hosting needs its own trusted API proxy; Vite's configuration is for local dev/preview.

@@ -1,26 +1,7 @@
-import { Activity, Cable } from "lucide-react";
+import { Cable } from "lucide-react";
 import type { Connection } from "../hooks/useBackend";
-import { EmptyState, Panel, timeLabel } from "../components/ui";
+import { Panel, timeLabel } from "../components/ui";
 
-export function AgentActivity() {
-  return (
-    <Panel
-      title="Execution history"
-      subtitle="Replay integration is coming soon"
-    >
-      <EmptyState
-        icon={<Activity size={30} />}
-        title="Ready for the next chapter"
-      >
-        <p>
-          Autonomous execution is not connected. When a real replay service is
-          available, its activity and outcomes can appear here.
-        </p>
-        <span className="badge">Coming soon</span>
-      </EmptyState>
-    </Panel>
-  );
-}
 export function Settings({ connection }: { connection: Connection }) {
   return (
     <div className="two-column">
@@ -41,7 +22,7 @@ export function Settings({ connection }: { connection: Connection }) {
             </div>
             <div>
               <dt>Proxied paths</dt>
-              <dd className="mono">/api · /health</dd>
+              <dd className="mono">/api · /health · /openapi.json</dd>
             </div>
             <div>
               <dt>ShadowBank Lite</dt>
@@ -65,8 +46,7 @@ export function Settings({ connection }: { connection: Connection }) {
       <Panel title="Workspace preferences" subtitle="Coming soon">
         <div className="panel-body">
           <p>
-            Editable preferences and replay configuration will be added when
-            their backend contracts are available.
+            Editable workspace preferences are not connected to a backend API.
           </p>
           <button className="button secondary" disabled>
             Save preferences · Coming soon

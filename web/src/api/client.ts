@@ -59,9 +59,11 @@ function errorDetail(payload: unknown): string | null {
     return (
       payload.detail
         .map((item) =>
-          isObject(item) && typeof item.msg === "string"
-            ? `${Array.isArray(item.loc) ? item.loc.join(".") + ": " : ""}${item.msg}`
-            : "",
+          typeof item === "string"
+            ? item
+            : isObject(item) && typeof item.msg === "string"
+              ? `${Array.isArray(item.loc) ? item.loc.join(".") + ": " : ""}${item.msg}`
+              : "",
         )
         .filter(Boolean)
         .join("; ") || null
@@ -72,9 +74,10 @@ function errorDetail(payload: unknown): string | null {
 export async function requestJson(
   path: string,
   init: RequestInit = {},
+  timeoutMs = 15000,
 ): Promise<unknown> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15000);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   let externallyAborted = false;
   const abort = () => {
     externallyAborted = true;
@@ -191,25 +194,18 @@ export async function compileSkill(
   const taskDescription = input.task_description.trim();
   if (!taskDescription)
     throw new ApiError("Enter a task description before compiling.");
-  const payload = await requestJson("/api/skills/compile", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      session_id: sessionId,
-      task_description: taskDescription,
-    }),
-  });
+  const payload = await requestJson(
+    "/api/skills/compile",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        session_id: sessionId,
+        task_description: taskDescription,
+      }),
+    },
+    120000,
+  );
   return { sessionId, taskDescription, payload };
 }
-// Responses intentionally remain unknown until the teammate's schemas are available.
-export function getSkillDraft(id: string): Promise<unknown> {
-  return requestJson(
-    `/api/skill-drafts/${encodeURIComponent(validateSessionId(id))}`,
-  );
-}
-export function getSkill(id: string): Promise<unknown> {
-  return requestJson(
-    `/api/skills/${encodeURIComponent(validateSessionId(id))}`,
-  );
-}
-// No confirmation request is defined: its body and approval semantics need a contract.
+// Typed review and replay operations live in workflows.ts.

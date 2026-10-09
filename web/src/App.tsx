@@ -12,12 +12,14 @@ import {
   Sparkles,
 } from "lucide-react";
 import type { CompileResult, LoadedRecording } from "./api/client";
+import type { SavedSkill } from "./api/contracts";
 import { useBackend } from "./hooks/useBackend";
 import { Overview } from "./pages/Overview";
 import { TeachMode } from "./pages/TeachMode";
 import { Recordings } from "./pages/Recordings";
 import { Skills } from "./pages/Skills";
-import { AgentActivity, Settings } from "./pages/System";
+import { Settings } from "./pages/System";
+import { Replay } from "./pages/Replay";
 
 const pages = [
   {
@@ -42,14 +44,14 @@ const pages = [
     id: "skills",
     label: "Skills",
     icon: Sparkles,
-    description: "Turn a recorded workflow into a compiler request.",
+    description: "Compile, inspect and explicitly confirm a workflow.",
   },
   {
     id: "activity",
     label: "Agent Activity",
     icon: Activity,
-    description: "A place for future replay activity and outcomes.",
-    soon: true,
+    description:
+      "Preflight a skill, approve replay and inspect its real execution.",
   },
   {
     id: "settings",
@@ -66,6 +68,7 @@ export default function App() {
     null,
   );
   const { connection, refresh } = useBackend();
+  const [confirmedSkill, setConfirmedSkill] = useState<SavedSkill | null>(null);
   const current = pages.find((item) => item.id === page)!;
   return (
     <div className="app-shell">
@@ -96,13 +99,6 @@ export default function App() {
             >
               <item.icon size={18} />
               <span>{item.label}</span>
-              {"soon" in item && (
-                <span
-                  className="soon-dot"
-                  title="Coming soon"
-                  aria-label="Coming soon"
-                />
-              )}
             </button>
           ))}
         </nav>
@@ -181,14 +177,17 @@ export default function App() {
           {page === "recordings" && (
             <Recordings recording={recording} setRecording={setRecording} />
           )}
-          {page === "skills" && (
+          <div hidden={page !== "skills"}>
             <Skills
               loadedSessionId={recording?.sessionId || ""}
               result={compileResult}
               setResult={setCompileResult}
+              onConfirmed={setConfirmedSkill}
             />
-          )}
-          {page === "activity" && <AgentActivity />}
+          </div>
+          <div hidden={page !== "activity"}>
+            <Replay confirmedSkill={confirmedSkill} />
+          </div>
           {page === "settings" && <Settings connection={connection} />}
           <footer className="app-footer">
             <span>ShadowOps Control Center</span>

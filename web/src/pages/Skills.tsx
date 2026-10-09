@@ -1,6 +1,14 @@
 import { useState } from "react";
-import { FileCode2, Sparkles } from "lucide-react";
-import { compileSkill, type CompileResult } from "../api/client";
+import { FileCode2, Sparkles, ShieldCheck } from "lucide-react";
+import { ApiError, compileSkill, type CompileResult } from "../api/client";
+import {
+  draftSchema,
+  type DraftRecord,
+  type Skill,
+  type SavedSkill,
+} from "../api/contracts";
+import { retrieveDraft, confirmDraft, parseContract } from "../api/workflows";
+import { SkillReview } from "../components/SkillReview";
 import {
   EmptyState,
   ErrorNotice,
@@ -13,132 +21,231 @@ export function Skills({
   loadedSessionId,
   result,
   setResult,
+  onConfirmed,
 }: {
   loadedSessionId: string;
   result: CompileResult | null;
   setResult: (result: CompileResult) => void;
+  onConfirmed: (skill: SavedSkill) => void;
 }) {
   const [sessionId, setSessionId] = useState(loadedSessionId);
   const [description, setDescription] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [draftId, setDraftId] = useState("");
+  const [draft, setDraft] = useState<DraftRecord | null>(null);
+  const [edited, setEdited] = useState<Skill | null>(null);
+  const [saved, setSaved] = useState<SavedSkill | null>(null);
+  const [approved, setApproved] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<CompileResult | null>(result);
-  async function compile() {
-    if (loading) return;
-    setLoading(true);
+  function loadDraft(data: DraftRecord) {
+    setDraft(data);
+    setDraftId(data.id);
+    setEdited(structuredClone(data.skill));
+    setSaved(null);
+    setApproved(false);
+  }
+  async function run(action: () => Promise<void>, mutating = false) {
+    if (busy) return;
+    setBusy(true);
     setError(null);
-    setView(null);
     try {
-      const data = await compileSkill({
-        session_id: sessionId,
-        task_description: description,
-      });
-      setView(data);
-      setResult(data);
+      await action();
     } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Request failed.";
       setError(
-        error instanceof Error ? error.message : "Compilation request failed.",
+        mutating && error instanceof ApiError && error.status === null
+          ? `${message} Inspect backend state before retrying: confirmation may have been saved despite a lost response.`
+          : message,
       );
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
   }
   return (
-    <div className="two-column">
-      <Panel
-        title="Compile a skill"
-        subtitle="Submit a recorded session and its intended task"
-      >
-        <form
-          className="panel-body compile-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void compile();
-          }}
-        >
-          <label htmlFor="compile-session">Recorded session ID</label>
-          <input
-            id="compile-session"
-            required
-            maxLength={128}
-            spellCheck={false}
-            autoComplete="off"
-            value={sessionId}
-            onChange={(event) => setSessionId(event.target.value)}
-            placeholder="Enter the session you demonstrated"
-          />
-          <label htmlFor="task-description">Task description</label>
-          <textarea
-            id="task-description"
-            required
-            rows={5}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="Describe the workflow and what a successful outcome looks like."
-          />
-          <p className="form-help">
-            This sends a real request to the compiler. It does not execute the
-            workflow.
-          </p>
-          <button type="submit" className="button primary" disabled={loading}>
-            <Sparkles size={16} />
-            {loading ? "Compiling…" : "Compile skill"}
-          </button>
-        </form>
-        <div className="panel-footer integration-note">
-          <span className="badge amber">Pending integration</span>
-          <p>
-            Compiler endpoints are not present in this checkout's backend. Until
-            your teammate connects them, the request may return HTTP 404.
-          </p>
-        </div>
-      </Panel>
-      <div className="side-stack">
-        {error && (
-          <ErrorNotice message={error} title="Compilation request failed" />
-        )}
+    <div className="feature-stack">
+      <div className="two-column">
         <Panel
-          title="Compiler response"
-          subtitle="The actual JSON returned by the API"
+          title="Compile a skill"
+          subtitle="Submit a real recording to the AI compiler"
         >
-          {loading ? (
-            <Loading>Waiting for the compiler…</Loading>
-          ) : view ? (
-            <div className="panel-body">
-              <dl className="response-context">
-                <div>
-                  <dt>Submitted session</dt>
-                  <dd className="mono">{view.sessionId}</dd>
-                </div>
-                <div>
-                  <dt>Submitted task</dt>
-                  <dd>{view.taskDescription}</dd>
-                </div>
-              </dl>
-              <JsonView value={view.payload} label="Actual compiler response" />
-            </div>
-          ) : (
-            <EmptyState
-              icon={<FileCode2 size={25} />}
-              title="No draft response yet"
-            >
-              <p>
-                A successful API response will appear here exactly as returned.
-                No skill data is preloaded.
-              </p>
-            </EmptyState>
-          )}
-          <div className="panel-footer">
-            <button className="button secondary" disabled>
-              Confirm draft · Coming soon
-            </button>
-            <p className="small muted">
-              Draft confirmation and skill retrieval await the backend response
-              and confirmation contracts. No confirmation payload is assumed.
+          <form
+            className="panel-body compile-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void run(async () => {
+                const data = await compileSkill({
+                  session_id: sessionId,
+                  task_description: description,
+                });
+                setView(data);
+                setResult(data);
+                loadDraft(parseContract(draftSchema, data.payload));
+              });
+            }}
+          >
+            <label htmlFor="compile-session">Recorded session ID</label>
+            <input
+              id="compile-session"
+              required
+              maxLength={128}
+              value={sessionId}
+              onChange={(e) => setSessionId(e.target.value)}
+              autoComplete="off"
+            />
+            {loadedSessionId && sessionId !== loadedSessionId && (
+              <button
+                type="button"
+                className="text-button"
+                onClick={() => setSessionId(loadedSessionId)}
+              >
+                Use loaded recording
+              </button>
+            )}
+            <label htmlFor="task-description">Task description</label>
+            <textarea
+              id="task-description"
+              required
+              maxLength={2000}
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+            <p className="form-help">
+              Compilation proposes a draft. Review and confirmation are separate
+              human actions.
             </p>
-          </div>
+            <button type="submit" className="button primary" disabled={busy}>
+              <Sparkles size={16} />
+              Compile skill
+            </button>
+          </form>
+        </Panel>
+        <Panel
+          title="Retrieve a draft"
+          subtitle="Open an existing proposal for human review"
+        >
+          <form
+            className="panel-body compile-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void run(async () => loadDraft(await retrieveDraft(draftId)));
+            }}
+          >
+            <label htmlFor="draft-id">Draft ID</label>
+            <input
+              id="draft-id"
+              required
+              maxLength={128}
+              disabled={busy}
+              value={draftId}
+              onChange={(e) => {
+                setDraftId(e.target.value);
+                setDraft(null);
+                setEdited(null);
+                setSaved(null);
+                setApproved(false);
+              }}
+              autoComplete="off"
+            />
+            <button className="button secondary" disabled={busy}>
+              Retrieve draft
+            </button>
+            <p className="form-help">
+              Uses the actual stored draft. Your corrections are sent only when
+              you explicitly confirm.
+            </p>
+          </form>
+          {view && (
+            <div className="panel-footer">
+              <details>
+                <summary>Last actual compiler response</summary>
+                <JsonView value={view.payload} />
+              </details>
+            </div>
+          )}
         </Panel>
       </div>
+      {busy && <Loading>Waiting for the backend…</Loading>}
+      {error && <ErrorNotice message={error} />}
+      <Panel
+        title="Human skill review"
+        subtitle={
+          draft
+            ? `${draft.id} · ${draft.model} · ${draft.session_id}`
+            : "Inspect the workflow before saving a confirmed skill"
+        }
+      >
+        {draft && edited ? (
+          <div className="panel-body">
+            <SkillReview
+              skill={edited}
+              readOnly={busy || saved !== null}
+              onChange={(skill) => {
+                setEdited(skill);
+                setApproved(false);
+              }}
+            />
+            {saved ? (
+              <div className="success-notice" role="status">
+                <ShieldCheck size={20} />
+                <div>
+                  <strong>Skill confirmed by the backend</strong>
+                  <p className="mono">{saved.id}</p>
+                  <p>
+                    Open Agent Activity and load this skill to prepare replay.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="approval-box">
+                <label className="check-label">
+                  <input
+                    type="checkbox"
+                    checked={approved}
+                    disabled={busy}
+                    onChange={(e) => setApproved(e.target.checked)}
+                  />
+                  I reviewed all steps, variables, uncertainties and success
+                  conditions, and approve saving this skill.
+                </label>
+                <button
+                  className="button primary"
+                  disabled={!approved || busy}
+                  onClick={() =>
+                    void run(async () => {
+                      setApproved(false);
+                      const confirmed = await confirmDraft(
+                        draft.id,
+                        edited,
+                        approved,
+                      );
+                      setSaved(confirmed);
+                      onConfirmed(confirmed);
+                    }, true)
+                  }
+                >
+                  <ShieldCheck size={16} />
+                  Confirm skill
+                </button>
+                <p className="small muted">
+                  Confirmation saves the corrected skill. It does not start a
+                  replay. Backend evidence validation may reject unsupported
+                  corrections.
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <EmptyState icon={<FileCode2 size={25} />} title="No draft loaded">
+            <p>
+              Compile a recording or retrieve a draft by its ID. No skill data
+              is preloaded.
+            </p>
+          </EmptyState>
+        )}
+      </Panel>
     </div>
   );
 }

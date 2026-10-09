@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { AlertCircle, ArrowRight, LoaderCircle } from "lucide-react";
 
 export function Panel({
@@ -100,4 +100,39 @@ export function timeLabel(value: string) {
     dateStyle: "medium",
     timeStyle: "medium",
   }).format(new Date(value));
+}
+
+export function TextField({
+  label,
+  value,
+  onChange,
+  multiline = false,
+  maxLength = 2000,
+  rows = 2,
+  disabled = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  multiline?: boolean;
+  maxLength?: number;
+  rows?: number;
+  disabled?: boolean;
+}) {
+  const id = useId();
+  const props = {
+    id,
+    value,
+    maxLength,
+    disabled,
+    onChange: (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => onChange(event.target.value),
+  };
+  return (
+    <div className="field-label">
+      <label htmlFor={id}>{label}</label>
+      {multiline ? <textarea {...props} rows={rows} /> : <input {...props} />}
+    </div>
+  );
 }

@@ -18,7 +18,7 @@ export function Overview({
 }: {
   connection: Connection;
   recording: LoadedRecording | null;
-  navigate: (page: "teach" | "recordings" | "skills") => void;
+  navigate: (page: "teach" | "recordings" | "skills" | "activity") => void;
 }) {
   return (
     <>
@@ -35,7 +35,7 @@ export function Overview({
           <p>
             Teach a workflow. Inspect the evidence.
             <br />
-            Build a skill when the compiler is ready.
+            Review a skill. Approve its replay.
           </p>
           <button className="button primary" onClick={() => navigate("teach")}>
             <ArrowLabel>Explore Teach Mode</ArrowLabel>
@@ -54,10 +54,10 @@ export function Overview({
             <small>Recorded events</small>
           </div>
           <span className="connector" />
-          <div className="future">
+          <div>
             <Sparkles size={20} />
             <span>Compile</span>
-            <small>Integration pending</small>
+            <small>Human review</small>
           </div>
         </div>
       </div>
@@ -159,17 +159,23 @@ export function Overview({
         </Panel>
         <Panel
           title="Agent activity"
-          subtitle="Execution integration is coming soon"
+          subtitle="Real replay controls and execution logs"
         >
-          <EmptyState
-            icon={<Activity size={25} />}
-            title="No execution service connected"
-          >
+          <EmptyState icon={<Activity size={25} />} title="Inspect a replay">
             <p>
-              This workspace can inspect recordings and request compilation.
-              Autonomous replay is not available yet.
+              Open Agent Activity to load a confirmed skill, run preflight and
+              explicitly approve replay. Results are shown only after an API
+              response.
             </p>
           </EmptyState>
+          <div className="panel-footer">
+            <button
+              className="text-button"
+              onClick={() => navigate("activity")}
+            >
+              <ArrowLabel>Open replay workspace</ArrowLabel>
+            </button>
+          </div>
         </Panel>
       </div>
     </>
