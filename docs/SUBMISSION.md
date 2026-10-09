@@ -6,7 +6,7 @@ The Interactive Sandbox is **Guided Replay**, a deterministic client-side execut
 
 Demo: choose **Find Sam Rivera's transaction**, then **Run the approved workflow**. Watch the visible state and source-event timeline. The workflow pauses before simulated creation; click **Approve simulated dispute** to create **SIM-1002**. This is separate from the historical real DSP-1002. Unsupported commands and cross-customer mismatches are blocked.
 
-Sprint validation: production demo build/typecheck passed; **19 frontend tests** and **10 actual Chromium checks** passed locally. The same ten checks are being run against the deployed HTTPS site. Prior verified results remain 152 backend tests and 42 local integration checks; these suites were not rerun during this time-limited frontend sprint.
+Sprint validation: production demo build/typecheck passed; **19 frontend tests** and **10 actual Chromium checks** passed locally. The same **10 unauthenticated Chromium checks passed against the actual deployed HTTPS site**, including mobile fit, preserved archived logs, approval handling, mismatch blocking, zero backend API requests and zero browser errors. Prior verified results remain 152 backend tests and 42 local integration checks; these suites were not rerun during this time-limited frontend sprint.
 
 Presentation: `docs/FAINI_ShadowOps_Final.pdf` contains seven English slides with real screenshots. PPTX was skipped within the hard deadline because the required bundled presentation authoring runtime was unavailable. No new AI capabilities or public backend were added.
 
