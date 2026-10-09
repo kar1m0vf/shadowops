@@ -1,95 +1,24 @@
 """Minimal browser-event recording API for ShadowOps."""
 
-import json
 import logging
 import os
 import sqlite3
-from contextlib import asynccontextmanager, closing, contextmanager
+from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Annotated, Iterator, Literal
+from typing import Annotated
 
 from fastapi import FastAPI, Path as PathParameter, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, StrictBool, StringConstraints
-
-
-NonEmptyText = Annotated[
-    str, StringConstraints(strip_whitespace=True, min_length=1, max_length=128)
-]
-BrowserURL = Annotated[
-    str, StringConstraints(strip_whitespace=True, min_length=1, max_length=4096)
-]
-
-
-class LocatorCandidate(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    strategy: Literal["role", "label", "placeholder", "test_id", "css"]
-    value: str = Field(min_length=1, max_length=4096)
-    name: str | None = Field(default=None, max_length=1024)
-    match_count: int | None = Field(
-        default=None, ge=0, exclude_if=lambda value: value is None
-    )
-
-
-class TargetContext(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    tag: str | None = Field(default=None, max_length=64)
-    role: str | None = Field(default=None, max_length=128)
-    label: str | None = Field(default=None, max_length=1024)
-    selector: str | None = Field(default=None, max_length=4096)
-
-
-class TargetMetadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    tag: str | None = Field(default=None, max_length=64)
-    role: str | None = Field(default=None, max_length=128)
-    label: str | None = Field(default=None, max_length=1024)
-    selector: str | None = Field(default=None, max_length=4096)
-    placeholder: str | None = Field(
-        default=None, max_length=1024, exclude_if=lambda value: value is None
-    )
-    locator_candidates: list[LocatorCandidate] | None = Field(
-        default=None, max_length=8, exclude_if=lambda value: value is None
-    )
-    context: TargetContext | None = Field(
-        default=None, exclude_if=lambda value: value is None
-    )
-
-
-class BrowserEvent(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    session_id: NonEmptyText
-    timestamp: AwareDatetime
-    url: BrowserURL
-    action: NonEmptyText
-    target: TargetMetadata
-    value: str | None = Field(
-        default=None, max_length=4096, exclude_if=lambda value: value is None
-    )
-    checked: StrictBool | None = Field(
-        default=None, exclude_if=lambda value: value is None
-    )
-
-
-class RecordedEvent(BrowserEvent):
-    id: int
-
-
-@contextmanager
-def database_connection(path: Path) -> Iterator[sqlite3.Connection]:
-    # Each request owns its connection; the inner context commits or rolls back.
-    with closing(sqlite3.connect(path, timeout=5)) as connection:
-        with connection:
-            yield connection
+from event_models import BrowserEvent, RecordedEvent
+from storage import database_connection, load_events
+from compiler.provider import LLMProvider
+from compiler.routes import compiler_router, initialize_compiler_storage
 
 
 def create_app(
-    database_path: Path | None = None, *, development: bool | None = None
+    database_path: Path | None = None, *, development: bool | None = None,
+    llm_provider: LLMProvider | None = None,
 ) -> FastAPI:
     database_path = (
         Path(database_path)
@@ -116,9 +45,11 @@ def create_app(
                 "CREATE INDEX IF NOT EXISTS events_session_order "
                 "ON events (session_id, id)"
             )
+            initialize_compiler_storage(connection)
         yield
 
     application = FastAPI(title="ShadowOps Backend", lifespan=lifespan)
+    application.include_router(compiler_router(database_path, llm_provider))
 
     if development:
         application.add_middleware(
@@ -159,12 +90,7 @@ def create_app(
     def get_events(
         session_id: Annotated[str, PathParameter(min_length=1, max_length=128)],
     ) -> list[RecordedEvent]:
-        with database_connection(database_path) as connection:
-            rows = connection.execute(
-                "SELECT id, payload FROM events WHERE session_id = ? ORDER BY id ASC",
-                (session_id,),
-            ).fetchall()
-        return [RecordedEvent(id=row[0], **json.loads(row[1])) for row in rows]
+        return load_events(database_path, session_id)
 
     return application
 

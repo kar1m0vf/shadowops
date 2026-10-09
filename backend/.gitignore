@@ -22,6 +22,7 @@ data/
 .env
 .env.*
 !.env.example
+!.env.ollama.example
 secrets/
 secrets.*
 *.pem

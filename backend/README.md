@@ -1,7 +1,11 @@
 # ShadowOps backend
 
 A minimal Python 3.11 FastAPI API that records generic browser interaction events
-in SQLite. It records data only; it does not learn skills or automate actions.
+in SQLite. The Skill Compiler uses a configured real local or cloud LLM to propose workflow
+drafts for human review. It does not execute workflows or replay browser actions.
+
+See [compiler/README.md](compiler/README.md) to configure inference, compile an
+existing recording, review it, and save a confirmed skill using Swagger or PowerShell.
 
 ## Set up in Windows PowerShell
 
@@ -111,13 +115,14 @@ Set-Location 'C:\Users\kar1m0vf\Desktop\shadowops-repo\backend'
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Expected output ends with `28 passed, 1 warning` (the elapsed time varies). Install
+Expected output ends with `109 passed, 1 warning` (the elapsed time varies). Install
 Chromium using the Teach Mode instructions below before running all tests. The
 installed Starlette test client emits a deprecation warning about `httpx`;
 it does not cause a test failure. Tests cover health,
 recording order, session isolation, persistence, validation, local development
 CORS, and storage errors. They use temporary SQLite files under `.pytest-tmp/`,
-so the development database is not used.
+so the development database is not used. Compiler tests use explicitly marked
+test-only LLM responses; they do not prove real inference or real learning.
 
 The backend's `.gitignore` excludes virtual environments, Python/test caches,
 SQLite files, `.env` files, and common secret files. No commit is created by these
