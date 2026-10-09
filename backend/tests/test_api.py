@@ -1,3 +1,4 @@
+import json
 import sqlite3
 
 import pytest
@@ -105,3 +106,37 @@ def test_storage_failure_returns_a_sensible_error(client, monkeypatch):
     assert response.json() == {
         "detail": "Event storage is temporarily unavailable. Try again."
     }
+
+
+def test_legacy_stored_events_and_new_boolean_state_remain_compatible(tmp_path):
+    database_path = tmp_path / 'events.sqlite3'
+    legacy = event()
+    legacy['target']['tag'] = 'input'
+    legacy['target']['role'] = 'checkbox'
+    legacy['value'] = 'true'  # Earlier recordings used strings; preserve them verbatim.
+    with TestClient(create_app(database_path)) as client:
+        with sqlite3.connect(database_path) as connection:
+            cursor = connection.execute(
+                'INSERT INTO events (session_id, payload) VALUES (?, ?)',
+                (legacy['session_id'], json.dumps(legacy)),
+            )
+            legacy_id = cursor.lastrowid
+        response = client.get('/api/events/demo-session')
+        assert response.status_code == 200
+        assert response.json() == [dict(legacy, id=legacy_id)]
+        current = event()
+        current['checked'] = False
+        recorded = client.post('/api/events', json=current)
+        assert recorded.status_code == 201
+        assert recorded.json()['checked'] is False
+        assert 'value' not in recorded.json()
+        assert client.get('/api/events/demo-session').json() == [
+            dict(legacy, id=legacy_id), recorded.json(),
+        ]
+
+
+@pytest.mark.parametrize('invalid_checked', ['true', 1])
+def test_checked_requires_a_real_json_boolean(client, invalid_checked):
+    payload = event()
+    payload['checked'] = invalid_checked
+    assert client.post('/api/events', json=payload).status_code == 422

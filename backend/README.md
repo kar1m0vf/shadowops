@@ -16,7 +16,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
 ```
 
-The branch must be `feat/core`. `python --version` must report `Python 3.11.x`
+The branch for the recorder task must be `feat/recorder`. `python --version` must report `Python 3.11.x`
 (this machine has Python 3.11.9). Creating the virtual environment usually produces
 no output. Installation ends with `Successfully installed ...` or reports
 `Requirement already satisfied ...` if the packages are installed already.
@@ -111,7 +111,8 @@ Set-Location 'C:\Users\kar1m0vf\Desktop\shadowops-repo\backend'
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Expected output ends with `7 passed, 1 warning` (the elapsed time varies). The
+Expected output ends with `28 passed, 1 warning` (the elapsed time varies). Install
+Chromium using the Teach Mode instructions below before running all tests. The
 installed Starlette test client emits a deprecation warning about `httpx`;
 it does not cause a test failure. Tests cover health,
 recording order, session isolation, persistence, validation, local development
@@ -121,6 +122,16 @@ so the development database is not used.
 The backend's `.gitignore` excludes virtual environments, Python/test caches,
 SQLite files, `.env` files, and common secret files. No commit is created by these
 setup commands.
+
+## Teach Mode browser recorder
+
+See [recorder/README.md](recorder/README.md) for Chromium installation, starting
+and stopping Teach Mode, inspecting a session, the value allowlist, and limitations.
+The recorder sends events to the same `/api/events` API and SQLite database.
+Optional target placeholder, locator candidates, surrounding `context`, locator
+`match_count`, and event `value`/boolean `checked` fields extend the schema.
+Older payloads and stored events remain compatible;
+the new fields are omitted when absent. The existing endpoints are unchanged.
 
 Reference documentation: [FastAPI CORS](https://fastapi.tiangolo.com/tutorial/cors/),
 [FastAPI testing](https://fastapi.tiangolo.com/tutorial/testing/), and

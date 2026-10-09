@@ -1,0 +1,12 @@
+{
+  "start_url": "http://127.0.0.1:5173",
+  "api_url": "http://127.0.0.1:8000",
+  "allowed_origins": ["http://127.0.0.1:5173"],
+  "value_allowlist": [
+    {
+      "origin": "http://127.0.0.1:5173",
+      "selector": "#transaction-id",
+      "synthetic_identifier": true
+    }
+  ]
+}

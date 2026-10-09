@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Generic recorder test</title>
+<body>
+  <h1>Recorder test</h1>
+  <label for="demo-note">Demo note</label><input id="demo-note" placeholder="Write a demo note">
+  <label for="unapproved">Unapproved field</label><input id="unapproved">
+  <label for="choice">Demo choice</label><select id="choice"><option value="first">First</option><option value="second">Second</option></select>
+  <label for="demo-check">Demo checkbox</label><input id="demo-check" type="checkbox">
+  <label for="transaction-id">Transaction ID</label><input id="transaction-id" placeholder="Enter transaction ID">
+  <fieldset><legend>Demo choice group</legend><label for="radio-a">Choice A</label><input id="radio-a" type="radio" name="demo-options" value="STATE_VALUE_SECRET"><label for="radio-b">Choice B</label><input id="radio-b" type="radio" name="demo-options" value="STATE_VALUE_SECRET"></fieldset>
+  <label for="sensitive-toggle">Remember password</label><input id="sensitive-toggle" type="checkbox">
+  <button id="save"><span>Save demo</span></button>
+  <button id="spa" onclick="history.pushState({}, '', '/demo-view?token=URL_QUERY_SECRET#URL_FRAGMENT_SECRET'); document.getElementById('dynamic').innerHTML = '<label for=&quot;dynamic-note&quot;>Dynamic note</label><input id=&quot;dynamic-note&quot;><button id=&quot;dynamic-button&quot;>Dynamic save</button>'">Open demo view</button>
+  <div id="dynamic"></div>
+  <a href="/second.html?token=URL_QUERY_SECRET#URL_FRAGMENT_SECRET">Next page</a>
+  <label for="password">Password</label><input id="password" type="password">
+  <label for="access-token">Access token</label><input id="access-token">
+  <label for="email">Email</label><input id="email" type="email">
+  <label for="card-number">Card number</label><input id="card-number">
+  <input id="hidden-token" type="hidden" value="HIDDEN_FIELD_SECRET">
+  <form id="login-form"><label for="login-name">Username</label><input id="login-name"><button>Sign in</button></form>
+  <button id="private-label">user@example.com</button>
+  <form id="demo-form" onsubmit="event.preventDefault()"><label for="form-note">Demo form note</label><input id="form-note"><button type="submit">Submit demo form</button></form>
+  <button id="decorated">Investigate transaction <span aria-hidden="true">→</span><span hidden>Hidden decoration</span></button>
+  <button id="unicode">Open café</button>
+  <section id="panel-alpha" aria-label="Alpha panel"><button>Review demo</button></section>
+  <section id="panel-beta" aria-label="Beta panel"><button>Review demo</button></section>
+  <section aria-label="Shared panel"><button>Duplicate demo</button><button>Duplicate demo</button></section>
+</body>
+</html>
