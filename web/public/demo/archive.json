@@ -1,0 +1,1165 @@
+{
+  "archive_version": 1,
+  "mode": "archived_verified_read_only",
+  "synthetic_data": true,
+  "events": [
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:57.580000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "navigation",
+      "target": {
+        "tag": "document",
+        "role": null,
+        "label": null,
+        "selector": null
+      },
+      "id": 26
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:57.776000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "click",
+      "target": {
+        "tag": "button",
+        "role": "button",
+        "label": "Investigate transaction",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "button",
+            "name": "Investigate transaction",
+            "match_count": 1
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "id": 27
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:57.920000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "input_change",
+      "target": {
+        "tag": "input",
+        "role": "textbox",
+        "label": "Transaction ID",
+        "selector": "#transaction-id",
+        "placeholder": "Enter transaction ID",
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "textbox",
+            "name": "Transaction ID",
+            "match_count": 1
+          },
+          {
+            "strategy": "label",
+            "value": "Transaction ID",
+            "name": null
+          },
+          {
+            "strategy": "placeholder",
+            "value": "Enter transaction ID",
+            "name": null
+          },
+          {
+            "strategy": "css",
+            "value": "#transaction-id",
+            "name": null,
+            "match_count": 1
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "value": "TXN-81001",
+      "id": 28
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:57.921000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "click",
+      "target": {
+        "tag": "button",
+        "role": "button",
+        "label": "Search transaction",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "button",
+            "name": "Search transaction",
+            "match_count": 1
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "id": 29
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:57.961000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "input_change",
+      "target": {
+        "tag": "input",
+        "role": "checkbox",
+        "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "checkbox",
+            "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "match_count": 1
+          },
+          {
+            "strategy": "label",
+            "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "name": null
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "checked": true,
+      "id": 30
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:58.011000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "input_change",
+      "target": {
+        "tag": "input",
+        "role": "checkbox",
+        "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "checkbox",
+            "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "match_count": 1
+          },
+          {
+            "strategy": "label",
+            "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "name": null
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "checked": false,
+      "id": 31
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:58.053000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "input_change",
+      "target": {
+        "tag": "input",
+        "role": "checkbox",
+        "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "checkbox",
+            "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "match_count": 1
+          },
+          {
+            "strategy": "label",
+            "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "name": null
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "checked": true,
+      "id": 32
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:58.088000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "click",
+      "target": {
+        "tag": "button",
+        "role": "button",
+        "label": "Create dispute case",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "button",
+            "name": "Create dispute case",
+            "match_count": 1
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "id": 33
+    },
+    {
+      "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+      "timestamp": "2026-10-09T09:43:58.143000Z",
+      "url": "http://127.0.0.1:5173/",
+      "action": "click",
+      "target": {
+        "tag": "button",
+        "role": "button",
+        "label": "Back to inbox",
+        "selector": null,
+        "locator_candidates": [
+          {
+            "strategy": "role",
+            "value": "button",
+            "name": "Back to inbox",
+            "match_count": 1
+          }
+        ],
+        "context": {
+          "tag": "main",
+          "role": "main",
+          "label": null,
+          "selector": "#main"
+        }
+      },
+      "id": 34
+    }
+  ],
+  "draft": {
+    "id": "draft-76800ab1-b73d-410f-a7fe-01e66d7ecc2a",
+    "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+    "task_description": "Investigate a transaction, verify its details, create a dispute case, and return to the inbox.",
+    "created_at": "2026-10-09T12:11:15.834684+00:00",
+    "model": "qwen3-vl:4b",
+    "status": "pending_review",
+    "source_event_ids": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "skill": {
+      "name": "Investigate Transaction and Create Dispute",
+      "description": "Draft for investigating a transaction, verifying details, creating a dispute case, and returning to the inbox. Requires human review for variable inputs and verification steps.",
+      "steps": [
+        {
+          "action": "navigate",
+          "description": "Navigate to the main application URL.",
+          "source_event_id": 26,
+          "target": null,
+          "url": "http://127.0.0.1:5173/",
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Investigate transaction' button to start the transaction investigation process.",
+          "source_event_id": 27,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Investigate transaction",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Investigate transaction",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "fill",
+          "description": "Enter the transaction ID into the input field. The value is a variable representing the transaction ID to be entered.",
+          "source_event_id": 28,
+          "target": {
+            "tag": "input",
+            "role": "textbox",
+            "label": "Transaction ID",
+            "selector": "#transaction-id",
+            "placeholder": "Enter transaction ID",
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "textbox",
+                "name": "Transaction ID",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "Transaction ID",
+                "name": null
+              },
+              {
+                "strategy": "placeholder",
+                "value": "Enter transaction ID",
+                "name": null
+              },
+              {
+                "strategy": "css",
+                "value": "#transaction-id",
+                "name": null,
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": "{{transaction_id}}",
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Search transaction' button to search for the transaction.",
+          "source_event_id": 29,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Search transaction",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Search transaction",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "set_checked",
+          "description": "Check the verification checkbox to confirm transaction details have been verified.",
+          "source_event_id": 30,
+          "target": {
+            "tag": "input",
+            "role": "checkbox",
+            "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "checkbox",
+                "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "name": null
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": true,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "set_checked",
+          "description": "Uncheck the verification checkbox to confirm transaction details have been verified.",
+          "source_event_id": 31,
+          "target": {
+            "tag": "input",
+            "role": "checkbox",
+            "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "checkbox",
+                "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "name": null
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": false,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "set_checked",
+          "description": "Recheck the verification checkbox to confirm transaction details have been verified.",
+          "source_event_id": 32,
+          "target": {
+            "tag": "input",
+            "role": "checkbox",
+            "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "checkbox",
+                "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "name": null
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": true,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Create dispute case' button to initiate the dispute creation process.",
+          "source_event_id": 33,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Create dispute case",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Create dispute case",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Back to inbox' button to return to the inbox.",
+          "source_event_id": 34,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Back to inbox",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Back to inbox",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        }
+      ],
+      "variables": [
+        {
+          "name": "transaction_id",
+          "description": "The transaction ID to be entered into the input field. This value is provided by the user.",
+          "source_event_id": 28,
+          "example_value": "TXN-81001",
+          "source": "human_input",
+          "requires_human_input": true,
+          "default_value": null
+        }
+      ],
+      "uncertainties": [
+        "The transaction ID entered may not match the expected format or value. Verification of transaction details requires human input and confirmation."
+      ],
+      "success_conditions": [
+        {
+          "description": "The transaction investigation process is completed successfully, and the dispute case is created. The user is returned to the inbox.",
+          "requires_human_verification": true
+        }
+      ],
+      "omitted_events": []
+    }
+  },
+  "confirmed_skill": {
+    "id": "skill-a2415f35-36b5-4d27-a86e-13cf5fe2679b",
+    "draft_id": "draft-76800ab1-b73d-410f-a7fe-01e66d7ecc2a",
+    "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+    "confirmed_at": "2026-10-09T12:55:50.915561+00:00",
+    "status": "confirmed",
+    "skill": {
+      "name": "Investigate Transaction and Create Dispute",
+      "description": "Draft for investigating a transaction, verifying details, creating a dispute case, and returning to the inbox. Requires human review for variable inputs and verification steps.",
+      "steps": [
+        {
+          "action": "navigate",
+          "description": "Navigate to the main application URL.",
+          "source_event_id": 26,
+          "target": null,
+          "url": "http://127.0.0.1:5173/",
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Investigate transaction' button to start the transaction investigation process.",
+          "source_event_id": 27,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Investigate transaction",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Investigate transaction",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "fill",
+          "description": "Enter the transaction ID into the input field. The value is a variable representing the transaction ID to be entered.",
+          "source_event_id": 28,
+          "target": {
+            "tag": "input",
+            "role": "textbox",
+            "label": "Transaction ID",
+            "selector": "#transaction-id",
+            "placeholder": "Enter transaction ID",
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "textbox",
+                "name": "Transaction ID",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "Transaction ID",
+                "name": null
+              },
+              {
+                "strategy": "placeholder",
+                "value": "Enter transaction ID",
+                "name": null
+              },
+              {
+                "strategy": "css",
+                "value": "#transaction-id",
+                "name": null,
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": "{{transaction_id}}",
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Search transaction' button to search for the transaction.",
+          "source_event_id": 29,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Search transaction",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Search transaction",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "set_checked",
+          "description": "Check the verification checkbox to confirm transaction details have been verified.",
+          "source_event_id": 30,
+          "target": {
+            "tag": "input",
+            "role": "checkbox",
+            "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "checkbox",
+                "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "name": null
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": true,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "set_checked",
+          "description": "Uncheck the verification checkbox; this clears the attestation and does not confirm verification.",
+          "source_event_id": 31,
+          "target": {
+            "tag": "input",
+            "role": "checkbox",
+            "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "checkbox",
+                "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "name": null
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": false,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "set_checked",
+          "description": "Recheck the verification checkbox to confirm transaction details have been verified.",
+          "source_event_id": 32,
+          "target": {
+            "tag": "input",
+            "role": "checkbox",
+            "label": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "checkbox",
+                "name": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "match_count": 1
+              },
+              {
+                "strategy": "label",
+                "value": "I have verified the transaction ID, customer ID, amount and currency against the customer request.",
+                "name": null
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": true,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Create dispute case' button to initiate the dispute creation process.",
+          "source_event_id": 33,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Create dispute case",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Create dispute case",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        },
+        {
+          "action": "click",
+          "description": "Click the 'Back to inbox' button to return to the inbox.",
+          "source_event_id": 34,
+          "target": {
+            "tag": "button",
+            "role": "button",
+            "label": "Back to inbox",
+            "selector": null,
+            "locator_candidates": [
+              {
+                "strategy": "role",
+                "value": "button",
+                "name": "Back to inbox",
+                "match_count": 1
+              }
+            ],
+            "context": {
+              "tag": "main",
+              "role": "main",
+              "label": null,
+              "selector": "#main"
+            }
+          },
+          "url": null,
+          "value": null,
+          "checked": null,
+          "question": null,
+          "uncertainty": null
+        }
+      ],
+      "variables": [
+        {
+          "name": "transaction_id",
+          "description": "The transaction ID to be entered into the input field. This value is provided by the user.",
+          "source_event_id": 28,
+          "example_value": "TXN-81001",
+          "source": "human_input",
+          "requires_human_input": true,
+          "default_value": null
+        }
+      ],
+      "uncertainties": [
+        "The transaction ID entered may not match the expected format or value. Verification of transaction details requires human input and confirmation."
+      ],
+      "success_conditions": [
+        {
+          "description": "The transaction investigation process is completed successfully, and the dispute case is created. The user is returned to the inbox.",
+          "requires_human_verification": true
+        }
+      ],
+      "omitted_events": []
+    }
+  },
+  "replay": {
+    "id": "replay-97072aef-1e0c-471d-a6c5-8acd0748e398",
+    "skill_id": "skill-a2415f35-36b5-4d27-a86e-13cf5fe2679b",
+    "parameters": {
+      "transaction_id": "TXN-81002"
+    },
+    "context_selection": {
+      "selector": ".request-item",
+      "text": "Sam Rivera"
+    },
+    "step_contexts": {},
+    "approved_steps": [
+      0,
+      2,
+      4,
+      8,
+      9
+    ],
+    "status": "completed",
+    "created_at": "2026-10-09T12:55:51.204503+00:00",
+    "current_step": 10,
+    "pause_reason": null,
+    "error": null,
+    "outcome_verified": true,
+    "review_evidence": null,
+    "results": [
+      {
+        "step": 1,
+        "action": "navigate",
+        "source_event_id": 26,
+        "status": "succeeded",
+        "detail": "Allowed local destination loaded.",
+        "timestamp": "2026-10-09T12:55:52.334849+00:00"
+      },
+      {
+        "step": 0,
+        "action": "select_context",
+        "source_event_id": null,
+        "status": "succeeded",
+        "detail": "Exactly one visible setup target resolved. Explicit human-requested context selected; this setup action is separate from recorded steps.",
+        "timestamp": "2026-10-09T12:55:52.674920+00:00"
+      },
+      {
+        "step": 2,
+        "action": "click",
+        "source_event_id": 27,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Approved element clicked; click alone is not proof of business success.",
+        "timestamp": "2026-10-09T12:55:52.807875+00:00"
+      },
+      {
+        "step": 3,
+        "action": "fill",
+        "source_event_id": 28,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Allowlisted field updated and final value verified.",
+        "timestamp": "2026-10-09T12:55:52.989265+00:00"
+      },
+      {
+        "step": 4,
+        "action": "click",
+        "source_event_id": 29,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Approved element clicked; click alone is not proof of business success.",
+        "timestamp": "2026-10-09T12:55:53.070102+00:00"
+      },
+      {
+        "step": 5,
+        "action": "set_checked",
+        "source_event_id": 30,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Final checked state verified: true. Visible request/transaction details independently matched.",
+        "timestamp": "2026-10-09T12:55:53.267147+00:00"
+      },
+      {
+        "step": 6,
+        "action": "set_checked",
+        "source_event_id": 31,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Final checked state verified: false.",
+        "timestamp": "2026-10-09T12:55:53.347678+00:00"
+      },
+      {
+        "step": 7,
+        "action": "set_checked",
+        "source_event_id": 32,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Final checked state verified: true. Visible request/transaction details independently matched.",
+        "timestamp": "2026-10-09T12:55:53.504078+00:00"
+      },
+      {
+        "step": 8,
+        "action": "click",
+        "source_event_id": 33,
+        "status": "paused",
+        "detail": "Exactly one visible target resolved. Explicit click approval required for this step; clicking may change application state.",
+        "timestamp": "2026-10-09T12:55:53.900536+00:00"
+      },
+      {
+        "step": 8,
+        "action": "click",
+        "source_event_id": 33,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Approved element clicked; click alone is not proof of business success.",
+        "timestamp": "2026-10-09T12:59:07.320852+00:00"
+      },
+      {
+        "step": 9,
+        "action": "click",
+        "source_event_id": 34,
+        "status": "paused",
+        "detail": "Exactly one visible target resolved. Explicit click approval required for this step; clicking may change application state.",
+        "timestamp": "2026-10-09T12:59:07.636085+00:00"
+      },
+      {
+        "step": 9,
+        "action": "click",
+        "source_event_id": 34,
+        "status": "succeeded",
+        "detail": "Exactly one visible target resolved. Approved element clicked; click alone is not proof of business success.",
+        "timestamp": "2026-10-09T13:00:31.512995+00:00"
+      },
+      {
+        "step": 10,
+        "action": "verify_outcome",
+        "source_event_id": null,
+        "status": "paused",
+        "detail": "Browser steps finished. Inspect the visible app, verification logs and every saved success condition; explicitly submit outcome_verified=true only if all are satisfied.",
+        "timestamp": "2026-10-09T13:00:31.520428+00:00"
+      },
+      {
+        "step": 10,
+        "action": "verify_outcome",
+        "source_event_id": null,
+        "status": "succeeded",
+        "detail": "Human explicitly verified all saved success conditions.",
+        "timestamp": "2026-10-09T13:05:28.379387+00:00"
+      }
+    ]
+  },
+  "verification": {
+    "actual_visible_confirmation": {
+      "customer_name": "Sam Rivera",
+      "request": {
+        "Customer ID": "CUS-3072",
+        "Transaction ID to find": "TXN-81002",
+        "Disputed amount": "$48.50 USD"
+      },
+      "transaction": {
+        "Case ID": "DSP-1002",
+        "Transaction ID": "TXN-81002",
+        "Customer ID": "CUS-3072",
+        "Amount": "$48.50 USD"
+      },
+      "field_matches": {
+        "transaction_id": true,
+        "customer_id": true,
+        "amount": true,
+        "currency": true
+      },
+      "independently_verified_before_attestation": true,
+      "checkbox_matches": 0,
+      "checkbox_checked": null,
+      "create_button_matches": 0,
+      "create_button_enabled": null,
+      "dispute_confirmation_visible": true
+    },
+    "human_confirmation": {
+      "confirmed": true,
+      "statement": "I confirm the successful outcome of this replay.",
+      "customer": "Sam Rivera",
+      "customer_id": "CUS-3072",
+      "transaction_id": "TXN-81002",
+      "amount": "48.50",
+      "currency": "USD",
+      "submitted_through": "POST /api/replays/replay-97072aef-1e0c-471d-a6c5-8acd0748e398/resume",
+      "submitted_body": {
+        "outcome_verified": true
+      },
+      "persisted_verification_log": {
+        "step": 10,
+        "action": "verify_outcome",
+        "source_event_id": null,
+        "status": "succeeded",
+        "detail": "Human explicitly verified all saved success conditions.",
+        "timestamp": "2026-10-09T13:05:28.379387+00:00"
+      }
+    },
+    "raw_events_original_draft_and_evidence_unchanged": true,
+    "original_evidence_sha256": "028e06a1355f29dac1919bba3ae37844be3f91fc6c5288d7e7be5a0b6e2c5e3c",
+    "screenshots": [
+      {
+        "file": "review-step-8.png",
+        "sha256": "B626F2A6E742F72E2D0E4E60575A1F66C6FC9B6FDF57C5A0CEA636DB9CF2D4AA",
+        "bytes": 68464
+      },
+      {
+        "file": "review-step-9.png",
+        "sha256": "316BF314F15C5D7B31F944FA00D87D4324E93518EDEBFEA1808FE2CBA23AC805",
+        "bytes": 60239
+      }
+    ],
+    "reset_action_performed": false,
+    "demo_state_note": "ShadowBank stores dispute state in React browser memory; closing the browser ends that session. No Reset Demo Data action was performed. The dispute confirmation, screenshots, logs and reviewed skill are archived."
+  },
+  "outcome": {
+    "case_id": "DSP-1002",
+    "customer": "Sam Rivera",
+    "customer_id": "CUS-3072",
+    "transaction_id": "TXN-81002",
+    "amount": "48.50",
+    "currency": "USD"
+  },
+  "provenance": {
+    "session_id": "teach-ebf67b9d-591b-481e-82f6-bebb2fa6f4b3",
+    "generated_at_baku": "2026-10-09T17:07:18.717010+04:00",
+    "source_artifact_hashes": [
+      {
+        "file": "final-replay-state.json",
+        "sha256": "9308a0bb00a3ee73c91a937a9edf4c503723c0ff22f2b31fb0e53351e3961f70"
+      },
+      {
+        "file": "confirmed-skill.json",
+        "sha256": "ac72206997078a2796b74654cf27bb0552b5812b4d778ab78a46afd590b27130"
+      },
+      {
+        "file": "execution-logs.json",
+        "sha256": "e2b341b00683c09d4c28a4fa12ed2f88d8ec928fec79828ea20c5585b140cbe9"
+      },
+      {
+        "file": "final-verification-evidence.json",
+        "sha256": "c2c4926bd21c94028205081efea6716c0d601c795fa876d33e9c2246503b32ae"
+      },
+      {
+        "file": "review-step-8.png",
+        "sha256": "b626f2a6e742f72e2d0e4e60575a1f66c6fc9b6fdf57c5a0cea636db9cf2d4aa"
+      },
+      {
+        "file": "review-step-9.png",
+        "sha256": "316bf314f15c5d7b31f944fa00d87d4324e93518edebfea1808fe2cba23ac805"
+      }
+    ]
+  },
+  "screenshots": {
+    "before_dispute": "/demo/before-dispute.png",
+    "confirmation": "/demo/dispute-confirmation.png"
+  }
+}

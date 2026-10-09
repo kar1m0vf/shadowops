@@ -1247,3 +1247,7 @@ pre.json-view {
     transition: none !important;
   }
 }
+/* Archived evidence uses the existing Control Center layout. */
+.archive-evidence { margin: 1rem 0; }
+.archive-evidence img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); }
+.archive-evidence figcaption { font-size: .8rem; margin-top: .5rem; }
