@@ -1,5 +1,12 @@
 # ShadowOps Control Center
 
+Public submission: [Archived Verified Demo — Read Only](https://shadowops-verified-demo.vercel.app).
+See [SUBMISSION.md](../docs/SUBMISSION.md) for the real evidence, demo instructions
+and limitations. `npm run dev` and `npm run build` retain local live mode;
+`npm run build:demo` builds the static archive with no live API hooks. Vercel
+deploys only `web/` using `vercel.json`. `web/public/demo/` contains the selected
+synthetic evidence; original private files remain under ignored `backend/data/`.
+
 React + TypeScript + Vite, with the existing plum/lavender/off-white design. Recordings, compilation, human skill review and replay use real API calls. No production fixtures, simulated outcomes, API secrets or automatic approvals.
 
 For the integrated checkout on `feat/integration`, use [the complete system startup and demo guide](../docs/integration.md). SO-INT-007 verified this UI against the existing populated backend database: recording, real AI draft, confirmed skill, parameterized preflight and completed replay logs. Fresh compilation, confirmation and replay mutations were not performed during integration.
