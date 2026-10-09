@@ -1,0 +1,22 @@
+# Local credentials, environments and generated dependencies
+.env
+.env.*
+!.env.example
+!.env.ollama.example
+.venv/
+venv/
+node_modules/
+.vercel/
+dist/
+
+# Local databases and execution evidence stay on this machine
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+backend/data/
+secrets/
+*.pem
+*.key

@@ -67,7 +67,9 @@ class ShadowBankVerifier:
         if not self.verified or local_origin(page.url) != "http://127.0.0.1:5173":
             return False
         try:
-            status = page.get_by_role("status")
+            status = page.get_by_role("status").filter(
+                has=page.get_by_role("heading", name="Dispute case created", exact=True)
+            )
             if status.count() != 1 or not status.is_visible():
                 return False
             if status.get_by_role("heading", name="Dispute case created", exact=True).count() != 1:

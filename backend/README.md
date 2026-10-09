@@ -6,6 +6,9 @@ drafts for human review. Confirmed skills can be executed in a visible local
 browser with explicit click approval and outcome verification; see
 [Replay instructions](replay/README.md).
 
+For the integrated Control Center on `feat/integration`, see
+[the system startup and demo guide](../docs/integration.md).
+
 See [compiler/README.md](compiler/README.md) to configure inference, compile an
 existing recording, review it, and save a confirmed skill using Swagger or PowerShell.
 
@@ -22,7 +25,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
 ```
 
-The branch for the recorder task must be `feat/recorder`. `python --version` must report `Python 3.11.x`
+Use `feat/integration` for the complete application. `python --version` must report `Python 3.11.x`
 (this machine has Python 3.11.9). Creating the virtual environment usually produces
 no output. Installation ends with `Successfully installed ...` or reports
 `Requirement already satisfied ...` if the packages are installed already.
@@ -117,7 +120,7 @@ Set-Location 'C:\Users\kar1m0vf\Desktop\shadowops-repo\backend'
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Expected output ends with `109 passed, 1 warning` (the elapsed time varies). Install
+Expected output ends with `152 passed, 1 warning` (the elapsed time varies). Install
 Chromium using the Teach Mode instructions below before running all tests. The
 installed Starlette test client emits a deprecation warning about `httpx`;
 it does not cause a test failure. Tests cover health,

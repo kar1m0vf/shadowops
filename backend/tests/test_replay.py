@@ -388,6 +388,20 @@ def test_verifier_rejects_wrong_intended_transaction_and_origin(browser_page, we
     assert not ShadowBankVerifier().verify_details(browser_page, "TXN-OTHER")
 
 
+def test_outcome_verifier_rejects_ambiguous_confirmation_regions(browser_page):
+    fixture = (Path(__file__).parent / "fixtures" / "shadowbank-verification.html").read_text(encoding="utf-8")
+    browser_page.route("http://127.0.0.1:5173/verifier-fixture", lambda route: route.fulfill(body=fixture, content_type="text/html"))
+    browser_page.goto("http://127.0.0.1:5173/verifier-fixture")
+    verifier = ShadowBankVerifier()
+    assert verifier.verify_details(browser_page, "TXN-TEST")
+    assert browser_page.get_by_role("status").count() == 2
+    assert verifier.observe_outcome(browser_page)
+    browser_page.get_by_role("status").filter(
+        has=browser_page.get_by_role("heading", name="Dispute case created", exact=True)
+    ).evaluate("element => element.after(element.cloneNode(true))")
+    assert not verifier.observe_outcome(browser_page)
+
+
 def test_preflight_preserves_checkbox_order_and_flags_false_confirmation(website):
     skill = fixture_skill(website)
     checkbox = skill.steps[2]
