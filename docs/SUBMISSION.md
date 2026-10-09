@@ -1,3 +1,15 @@
+## Final sprint: Team FAINI
+
+Public interactive demo: https://shadowops-verified-demo.vercel.app/#interactive
+
+The Interactive Sandbox is **Guided Replay**, a deterministic client-side execution of the saved real AI-compiled nine-step skill against isolated synthetic bank state. It performs no new inference, backend request, remote browser automation or real dispute creation. The archive pages retain the actual Qwen compilation, human review and verified DSP-1002 result.
+
+Demo: choose **Find Sam Rivera's transaction**, then **Run the approved workflow**. Watch the visible state and source-event timeline. The workflow pauses before simulated creation; click **Approve simulated dispute** to create **SIM-1002**. This is separate from the historical real DSP-1002. Unsupported commands and cross-customer mismatches are blocked.
+
+Sprint validation: production demo build/typecheck passed; **19 frontend tests** and **10 actual Chromium checks** passed locally. The same ten checks are being run against the deployed HTTPS site. Prior verified results remain 152 backend tests and 42 local integration checks; these suites were not rerun during this time-limited frontend sprint.
+
+Presentation: `docs/FAINI_ShadowOps_Final.pdf` contains seven English slides with real screenshots. PPTX was skipped within the hard deadline because the required bundled presentation authoring runtime was unavailable. No new AI capabilities or public backend were added.
+
 # ShadowOps — Hackathon submission
 
 **Public demo:** https://shadowops-verified-demo.vercel.app

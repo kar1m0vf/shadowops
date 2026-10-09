@@ -1251,3 +1251,5 @@ pre.json-view {
 .archive-evidence { margin: 1rem 0; }
 .archive-evidence img { display: block; width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--border); }
 .archive-evidence figcaption { font-size: .8rem; margin-top: .5rem; }
+
+.guided-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px}.guided-demo{overflow-wrap:anywhere}.guided-demo input:not([type=checkbox]){width:100%;margin:8px 0 12px;padding:12px;border:1px solid #cbd5e1;border-radius:8px;background:white;color:#172033}.guided-examples{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.guided-examples button{text-align:left;white-space:normal}.guided-messages{max-height:260px;overflow:auto;background:#f3f6fa;border-radius:10px;padding:12px;margin-bottom:16px}.guided-result,.guided-approval,.guided-active{padding:14px;background:#eef7f3;border:1px solid #bddbd0;border-radius:10px;margin:12px 0}.guided-approval{background:#fff8e5;border-color:#eedda3}.guided-demo li{margin:10px 0}.guided-demo .notice{padding:18px;border:1px solid #cbd5e1;border-radius:10px}@media(max-width:900px){.guided-columns{grid-template-columns:1fr}}
