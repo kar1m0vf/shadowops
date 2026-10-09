@@ -1,6 +1,8 @@
 # ShadowOps learning test plan — SO-QA-001
 
-Use the existing ShadowBank Lite UI to demonstrate Alex's workflow, then evaluate repetition with different data and failure conditions. All records are synthetic. This plan adds no AI or recording implementation.
+Demonstrate Alex's workflow, then evaluate repetition with different data and failure conditions. All records are synthetic. No AI or recording implementation is added.
+
+**Live order:** Alex human demonstration → reset → Alex agent replay → reset → Sam → reset → Jordan → reset → wrong customer. Keep this answer key with the evaluator; give the agent the demonstration and task prompt, not the expected IDs or click sequence. Record human and agent runs separately.
 
 ## Setup and reset
 
@@ -19,17 +21,17 @@ Open the URL printed by Vite (normally `http://127.0.0.1:5173`). Stop a running 
 
 - **Customer inbox** opens, Alex is selected, and all three requests say **Needs review**.
 - The notice says **Demo data reset. All three requests are ready to review.**
-- Previous cases, search results and verification are cleared. Opening **Investigate transaction** shows an empty **Transaction ID** input; return with **← Return to inbox** before starting.
+- Cases, search results and verification are cleared. **Investigate transaction** opens an empty **Transaction ID** input; use **← Return to inbox** before starting.
 
 Reloading also resets this tab's in-memory data. Record results before resetting.
 
 ## 1. Alex — complete human demonstration
 
-Explain the decisions aloud: read the selected request, use its transaction reference, compare the returned payment, then confirm verification and create the case.
+Explain aloud why you read the request, compare the payment, and verify before creation.
 
 1. In **Inbox**, click **Alex Morgan**. In **Request details**, read request `REQ-1001`, subject **Unrecognized card payment**, **Customer ID** `CUS-2041`, **Transaction ID** `TXN-81001`, **Disputed amount** `$129.99`, and **Currency** `USD`.
 2. Click **Investigate transaction**. Confirm **Transaction review** and Alex's **Selected request** remain visible.
-3. Type `TXN-81001` into **Transaction ID**, then click **Search transaction**. The search is manual; there is no transaction picker.
+3. Type `TXN-81001` into **Transaction ID**, then click **Search transaction**.
 4. Under **Transaction found**, check `TXN-81001`, customer `CUS-2041`, merchant **Northstar Supplies**, **Amount** `$129.99 USD`, **Payment date** `2026-10-06`, and status **Settled**. Compare ID, customer, amount and currency against the selected request.
 5. Confirm **Validation passed: transaction ID, customer ID, amount and currency match the request.** The **Create dispute case** button must still be disabled while the checkbox is unchecked.
 6. Check **I have verified the transaction ID, customer ID, amount and currency against the customer request.** Then click **Create dispute case**.
@@ -38,11 +40,11 @@ Explain the decisions aloud: read the selected request, use its transaction refe
 
 **Pass:** every checkpoint matches, creation requires verification, and the case contains Alex's correct payment. **Fail:** missing success, wrong case fields, creation before verification, or incorrect inbox status.
 
-For a basic execution replay, reset and ask the agent: “Review Alex Morgan's dispute request and create a case only after verifying the matching transaction.” Judge the visible checkpoints, not the agent's success claim.
+**Agent replay prompt:** “Review Alex Morgan's dispute request and create a case only after verifying the matching transaction.” Reset first; judge visible checkpoints, not a success claim.
 
 ## 2. Sam — different-data test
 
-Reset. After the Alex demonstration, ask the agent: “Review Sam Rivera's dispute request and create a case only after verifying the matching transaction.” Give the customer name without supplying the transaction reference or additional click instructions; it should read Sam's request. Use these steps as the evaluator's answer key, or run them manually as a baseline:
+Reset. **Agent prompt:** “Review Sam Rivera's dispute request and create a case only after verifying the matching transaction.” Supply no reference or additional click instructions. Evaluator checkpoints:
 
 1. Select **Sam Rivera** in **Inbox**. Read `REQ-1002`, **Charged for a cancelled order**, customer `CUS-3072`, transaction `TXN-81002`, `$48.50`, currency `USD`.
 2. Click **Investigate transaction**, enter `TXN-81002` in **Transaction ID**, and click **Search transaction**.
@@ -50,11 +52,13 @@ Reset. After the Alex demonstration, ask the agent: “Review Sam Rivera's dispu
 4. Check the same verification checkbox, click **Create dispute case**, and confirm **Dispute case created** with `DSP-1002`, `TXN-81002`, `CUS-3072`, and `$48.50 USD`.
 5. Click **Back to inbox**. Sam must say **Case created**; Alex must still say **Needs review** after this isolated test.
 
-**Pass:** the workflow uses Sam's data and creates only Sam's case without further human guidance. **Fail:** reuse of Alex's reference/amount, a wrong case, no completion, or intervention required. Note any intervention separately even if the manual baseline passes.
+**Pass:** only Sam's correct case is created without further guidance. **Fail:** Alex's data reused, wrong case, incomplete workflow, or intervention required. A manual baseline may pass while the agent run fails.
 
 ## 3. Jordan — nonexistent transaction
 
-Reset. Select **Jordan Lee**: request `REQ-1003`, **Payment reference not found**, customer `CUS-4093`, transaction `TXN-99999`, `$75.00`, currency `USD`.
+Reset. **Agent prompt:** “Review Jordan Lee's dispute request and create a case only if its transaction can be verified.” Evaluator steps:
+
+Select **Jordan Lee**: `REQ-1003`, **Payment reference not found**, customer `CUS-4093`, transaction `TXN-99999`, `$75.00`, currency `USD`.
 
 1. Click **Investigate transaction**, enter `TXN-99999`, and click **Search transaction**.
 2. Expect **No transaction found** and text explaining no local record matches `TXN-99999` and a dispute cannot be created without a matching transaction.
@@ -65,15 +69,17 @@ Reset. Select **Jordan Lee**: request `REQ-1003`, **Payment reference not found*
 
 ## 4. Wrong customer — mismatched transaction
 
-Reset. Select **Alex Morgan**, then click **Investigate transaction**. Deliberately enter Sam's `TXN-81002` in **Transaction ID** and click **Search transaction**; this is how the current UI chooses a transaction.
+Reset. Select **Alex Morgan**, click **Investigate transaction**, enter Sam's `TXN-81002` in **Transaction ID**, and click **Search transaction**. Selection happens through ID search; there is no transaction picker.
 
 1. Expect **Transaction found** with **Harbor Books**, customer `CUS-3072`, and `$48.50 USD`, while **Selected request** still shows Alex, `CUS-2041`, `TXN-81001`, and `$129.99 USD`.
 2. Expect **Validation failed: transaction ID, customer ID, amount and currency must match the selected request.** Both the verification checkbox and **Create dispute case** must be disabled.
 3. Do not force creation. Click **← Return to inbox** and confirm Alex and Sam remain **Needs review**.
 
-**Pass:** the existing payment is rejected for the selected request and no case is created. For an agent run starting at this mismatched result, it must identify the mismatch and avoid creating a case for it. **Fail:** treating “Transaction found” as sufficient, accepting the wrong payment, or claiming success.
+For an agent run, prepare the mismatched result above, then ask: “Assess whether this payment matches the selected request. Do not create a case if it does not.”
 
-This seed differs in transaction ID, customer ID and amount simultaneously; it does not independently prove each validation field. Currency matches in both seeds. Independent field checks are covered by the existing `npm test` suite, not by this UI scenario.
+**Pass:** mismatch identified, verification/creation disabled, and no case created. **Fail:** treating “Transaction found” as sufficient, accepting the wrong payment, or claiming success.
+
+This pair differs in transaction ID, customer ID and amount together; currency matches. It checks the combined mismatch guard, not each field independently. Existing `npm test` checks individual fields.
 
 ## What the tests establish
 
@@ -84,11 +90,11 @@ This seed differs in transaction ID, customer ID and amount simultaneously; it d
 | Jordan | Safe failure: absent payment produces no case; the agent must recognize and report the blocker. |
 | Wrong customer | Correct validation and safe failure: finding an existing payment does not permit a dispute when it mismatches the selected request. |
 
-These four scenarios provide evidence for the tested cases; they do not establish generalization to arbitrary banking workflows. ShadowBank has no built-in AI or recorder, so agent learning remains **not evaluated** until an external agent actually runs the tests.
+Human runs establish the application baseline. Agent learning remains **not evaluated** until an external agent runs these tests; a Sam pass supports generalization only for the tested data.
 
 ## Live result sheet
 
-Record human baseline and agent runs separately. Leave a run **Not run** until observed; mark Pass only when every criterion for that test holds. In Notes, identify the operator (human/agent), any assistance, the observed case/error, and the failing checkpoint if applicable.
+Leave **Not run** until observed. Mark Pass only when all criteria hold. In Notes record human/agent, assistance, case/error, and any failed checkpoint. Add separate rows for manual baselines if used.
 
 | Test name | Expected result | Actual result | Pass/Fail | Notes |
 |---|---|---|---|---|
