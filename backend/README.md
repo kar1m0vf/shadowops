@@ -2,7 +2,9 @@
 
 A minimal Python 3.11 FastAPI API that records generic browser interaction events
 in SQLite. The Skill Compiler uses a configured real local or cloud LLM to propose workflow
-drafts for human review. It does not execute workflows or replay browser actions.
+drafts for human review. Confirmed skills can be executed in a visible local
+browser with explicit click approval and outcome verification; see
+[Replay instructions](replay/README.md).
 
 See [compiler/README.md](compiler/README.md) to configure inference, compile an
 existing recording, review it, and save a confirmed skill using Swagger or PowerShell.

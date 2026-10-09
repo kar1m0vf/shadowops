@@ -9,16 +9,22 @@ from typing import Annotated
 
 from fastapi import FastAPI, Path as PathParameter, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import request_validation_exception_handler
 from fastapi.responses import JSONResponse
 from event_models import BrowserEvent, RecordedEvent
 from storage import database_connection, load_events
 from compiler.provider import LLMProvider
 from compiler.routes import compiler_router, initialize_compiler_storage
+from replay.policy import ReplayPolicy
+from replay.routes import replay_router
+from replay.runner import ReplayManager, initialize_replay_storage
 
 
 def create_app(
     database_path: Path | None = None, *, development: bool | None = None,
     llm_provider: LLMProvider | None = None,
+    replay_policy: ReplayPolicy | None = None,
 ) -> FastAPI:
     database_path = (
         Path(database_path)
@@ -27,6 +33,7 @@ def create_app(
     )
     if development is None:
         development = os.getenv("SHADOWOPS_ENV", "production") == "development"
+    replay_manager = ReplayManager(database_path, replay_policy or ReplayPolicy.default())
 
     @asynccontextmanager
     async def lifespan(application: FastAPI):
@@ -46,10 +53,26 @@ def create_app(
                 "ON events (session_id, id)"
             )
             initialize_compiler_storage(connection)
-        yield
+            initialize_replay_storage(connection)
+        replay_manager.recover()
+        try:
+            yield
+        finally:
+            replay_manager.stop()
+            if replay_manager.thread:
+                replay_manager.thread.join(timeout=10)
 
     application = FastAPI(title="ShadowOps Backend", lifespan=lifespan)
     application.include_router(compiler_router(database_path, llm_provider))
+    application.include_router(replay_router(database_path, replay_manager))
+    application.state.replay_manager = replay_manager
+
+    @application.exception_handler(RequestValidationError)
+    async def validation_error(request: Request, error: RequestValidationError):
+        if request.url.path.startswith("/api/replays"):
+            # Pydantic's default error body echoes inputs, including rejected secrets.
+            return JSONResponse(status_code=422, content={"detail": "Invalid replay input. Use the Swagger schema; sensitive values and implicit approval are forbidden."})
+        return await request_validation_exception_handler(request, error)
 
     if development:
         application.add_middleware(

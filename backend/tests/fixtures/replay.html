@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Generic replay fixture</title>
+<main id="main">
+  <label>Reference ID <input id="reference-id"></label>
+  <label>Reviewed <input id="reviewed" type="checkbox"></label>
+  <label>Broken checkbox <input id="broken" type="checkbox" onclick="event.preventDefault()"></label>
+  <label>Secret <input id="secret" type="password"></label>
+  <label>Hidden <input id="hidden" type="hidden"></label>
+  <div class="row"><span>REQ-A</span><button>Open</button></div>
+  <div class="row"><span>REQ-B</span><button>Open</button></div>
+  <button id="save" onclick="document.getElementById('result').hidden=false">Save</button>
+  <button id="react" onclick="setTimeout(() => {this.outerHTML='<button id=next>Next screen</button>'}, 80)">Change screen</button>
+  <p id="result" role="status" hidden>Saved</p>
+  <p id="invisible" hidden>Never visible</p>
+</main></html>
